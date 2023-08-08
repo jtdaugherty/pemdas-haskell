@@ -32,6 +32,45 @@ prop_evalVarEmptyEnv name = isLeft $ evaluateIn basicLanguage (Variable name)
 
 prop_evalQuantification :: String -> Integer -> [(String, Integer)] -> Bool
 prop_evalQuantification name domainMin env =
+    -- JTD:
+    --
+    -- Three style notes:
+    --
+    -- Record type and value syntax typically has whitespace around
+    -- the '=', so
+    --
+    -- aggName = "Sigma"
+    --
+    -- Second:
+    --
+    -- For readability, I recommend either putting the first record
+    -- field and "{" on the same line as the constructor or, if that
+    -- results in a line that you think is too long, make a local helper
+    -- function that makes building these records less verbose.
+    --
+    -- Third:
+    --
+    -- The (Quantified ...) expression here is problematic for
+    -- readability because it breaks up the line that contains it
+    -- (starting with "evaluateIn"). I recommend pulling these bits
+    -- out as 'let' bindings, i.e.,
+    --
+    -- let expr = Quantified $
+    --            AggregationApplication { aggName = "Sigma"
+    --                                   , varName = name
+    --                                   , domainMin = domainMin
+    --                                   , domainMax = domainMin + 1
+    --                                   , aggBody = Variable name
+    --                                   }
+    --     expectedResult = Right $ domainMin + domainMin + 1
+    --     actualResult = evaluateIn basicLanguage expr
+    --
+    -- in actualResult == expectedResult
+    --
+    -- In general, 'let' (or 'where') bindings are going to do wonders
+    -- for resulting in more readable, concise, and clearer expressions,
+    -- and they'll also help avoid indentation or parenthesizing
+    -- headaches, both for reading and refactoring.
     evaluateIn basicLanguage (Quantified
         AggregationApplication
         { aggName="Sigma"
@@ -48,8 +87,19 @@ prop_fullEvaluation nameX nameY x domainMin =
     evaluateIn
         (basicLanguage { env = [(nameX, x)] })
         (Infix "+" (Variable nameX)
+        -- JTD:
+        --
+        -- I recommend putting the dollar signs on the preceding lines, i.e.,
+        --
+        -- Negated $
+        -- Quantified $
+        -- ...
         $ Negated
         $ Quantified
+        -- JTD:
+        --
+        -- Another spot where I'd recommend a change of record syntax as
+        -- well as a 'let' binding.
         $ AggregationApplication
             { aggName="Sigma"
             , varName=nameY
