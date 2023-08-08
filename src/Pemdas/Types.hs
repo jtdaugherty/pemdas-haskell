@@ -147,7 +147,7 @@ instance (Num a, Show a) => Show (Expr a) where
 -- The pattern-match on Language should be on one line here (as is the
 -- case in general with function argument pattern-matching), and if that
 -- results in a line that's too long for your taste (even with field
--- repunning) then I commend just writing this instead:
+-- punning) then I commend just writing this instead:
 --
 -- evaluateIn lang =
 evaluateIn :: Num a => Language a -> Expr a -> Either String a
