@@ -28,6 +28,8 @@ executable pemdas
     -- other-extensions:
     build-depends:
         base ^>=4.16.4.0,
+        -- JTD: I'll note this in Main.hs as well, but I recommend
+        -- hiding parsec from your library's public API.
         parsec ^>= 3.1.16.1,
         pemdas
     hs-source-dirs:   app
@@ -56,6 +58,14 @@ test-suite pemdas-unit-tests
     -- other-extensions:
     type:             exitcode-stdio-1.0
     build-depends:
+        -- JTD: the bounds for both base and parsec here are redundant.
+        -- Since your library already specifies the bounds, these bounds
+        -- will either conflict with those if not maintained, or just
+        -- be (effectively) ignored. You can safely remove the bounds
+        -- from these dependencies since the library's dependencies will
+        -- determine what cabal chooses to do. (And I recommend keeping
+        -- the bounds on the library, if you had to pick, since the test
+        -- suite won't get build unless tests are enabled.)
         base ^>=4.16.4.0,
         parsec ^>= 3.1.16.1,
         pemdas,
