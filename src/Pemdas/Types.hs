@@ -16,15 +16,19 @@ where
 --
 -- Style note: as with record values, for readability I recommend always
 -- putting the constructor name on the same line as the first record
--- field. Breaking it up this way can be jarring for readers since the
--- fields go together with the constructor, and in some cases you might
--- want more than one record constructor in the same type, in which case
--- this style makes that even harder to read.
+-- field. Breaking those up can be jarring for readers since the fields
+-- go together with the constructor, and in some cases you might want
+-- more than one record constructor in the same type, in which case that
+-- style makes for harder reading. (Although there are other pitfalls
+-- with declaring record types with multiple constructors that we could
+-- discuss.)
 --
 -- data Num a => Language a =
 --     Language { binOps ...
 --              ...
 --              }
+--     | OtherConstr { ...
+--                   }
 data Num a => Language a = Language
     { binOps :: [(String, BinOp a)]
     , functions :: [(String, Function a)]
