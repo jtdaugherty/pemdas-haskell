@@ -45,7 +45,7 @@ main = do
     --     parser = do
     --         parsedExpr <- P.makeExprParser $ binOps doubleLanguage
     --         eof
-    --         return parsedExpr)
+    --         return parsedExpr
     --
     -- Also, parser can be simplified to:
     --
