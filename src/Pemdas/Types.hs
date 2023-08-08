@@ -44,7 +44,7 @@ data Num a => Expr a =
     -- JTD:
     --
     -- It looks like you want to be able to register new infix operators
-    -- dynamically. If so, I recommend using a newtype here instead
+    -- dynamically. If so, I recommend using a 'newtype' here instead
     -- of String, so as to avoid possible (and likely) bugs where you
     -- are holding a String and don't know for sure whether it's a
     -- legitimate operator.
