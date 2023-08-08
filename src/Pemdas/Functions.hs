@@ -21,11 +21,32 @@ cantFail2 :: (a -> b -> c) -> (a -> b -> Either String c)
 cantFail2 f x y = Right $ f x y
 
 
+-- JTD:
+--
+-- There are a few ways to break up a type signature like this. One way
+-- that I like which makes it easy to line things up and makes it a bit
+-- easier to write Haddock documentation for each argument type is:
+--
+-- withOptionalSubscript :: String
+--                       -> (Maybe a -> a -> Either String a)
+--                       -> (String, Function a)
+--
+-- Then it becomes possible to write inline Haddock like so:
+--
+-- withOptionalSubscript :: String
+--                       -- ^ The string argument documentation
+--                       -> (Maybe a -> a -> Either String a)
+--                       -- ^ The function argument documentation
+--                       -> (String, Function a)
 withOptionalSubscript ::
     String -> (Maybe a -> a -> Either String a) -> (String, Function a)
 withOptionalSubscript name wrappedFunc =
     (name, inner)
     where
+        -- JTD:
+        --
+        -- Assuming the pattern ordering is still valid, failure cases
+        -- are typically put last.
         inner _ (Just _) _ =
             Left $ "\\" ++ name ++ " does not accept superscript"
         inner subscript Nothing arg =
@@ -59,6 +80,9 @@ coreBinOps =
     , ("-", (6, cantFail2 (-)))
     , ("*", (7, cantFail2 (*)))
     ]
+-- JTD:
+--
+-- Typically one blank line between consecutive top-level declarations.
 floatingBinOps :: Floating a => [(String, BinOp a)]
 floatingBinOps =
     [ ("/",  (7, cantFail2 (/)))
@@ -66,6 +90,19 @@ floatingBinOps =
     ]
 integralBinOps :: Integral a => [(String, BinOp a)]
 integralBinOps =
+    -- JTD:
+    --
+    -- If you wanted to write the bodies of these ops monadically,
+    -- here's how you could do it. This might be easier to read and/or
+    -- extend and would be a bit more compact. But to some extent this
+    -- comes down to whether you want to commit to a local convention of
+    -- writing your evaluator's code in a monadic style everywhere. (I
+    -- probably would.)
+    --
+    -- (7, \m n -> do
+    --     when (n == 0) $ fail "modulo 0"
+    --     return $ mod m n
+    -- )
     [ ("%", (7, \m n -> if n == 0 then Left "modulo 0" else Right $ mod m n))
     , ( "//"
       , (7, \m n -> if n == 0 then Left "division by 0" else Right $ div m n)
@@ -81,6 +118,23 @@ floatingFunctions :: Floating a => [(String, Function a)]
 floatingFunctions =
     [ withOptionalSuperscript "sin"
         (\maybeSub arg ->
+            -- JTD:
+            --
+            -- Perhaps 'maybeSub' should be called 'maybeSuper' here?
+            --
+            -- There's some repetition of values in the various floating
+            -- functions that I'd probably pull out as follows.
+            --
+            -- This
+            --
+            -- Right $ case maybeSub of
+            --     Nothing -> sin arg
+            --     Just sub -> sin arg ** sub
+            --
+            -- would become
+            --
+            -- let maybeSuper = maybe id (flip (**)) maybeSub
+            -- in return $ maybeSuper $ sin arg
             Right $ case maybeSub of
                 Nothing -> sin arg
                 Just sub -> sin arg ** sub
