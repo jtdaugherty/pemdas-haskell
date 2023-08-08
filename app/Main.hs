@@ -46,6 +46,10 @@ main = do
     --         parsedExpr <- P.makeExprParser $ binOps doubleLanguage
     --         eof
     --         return parsedExpr)
+    --
+    -- Also, parser can be simplified to:
+    --
+    --     parser = (P.makeExprParser $ binOps doubleLanguage) <* eof
     let parseResult =
             parse
                 (do
