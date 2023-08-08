@@ -174,9 +174,10 @@ evaluateIn (Language
         -- this because some of the other evalExpr alternatives are
         -- written in a monadic style. One reason to think about doing
         -- this is because if you use the generic Monad and MonadFail
-        -- interfaces, you can change your monad later with very little
-        -- updates to the body of this function, in case you want to
-        -- change your error propagation semantics.
+        -- interfaces, you can change your monad type later with very
+        -- little updates to the body of this function, in case you want
+        -- to change your error propagation semantics or something like
+        -- that.
         let evalExpr (Literal x) = Right x
             evalExpr (Variable name) =
                 case lookup name env' of
