@@ -160,10 +160,11 @@ evaluateIn (Language
     where
     -- JTD:
     --
-    -- Some of these 'where' bindings are large enough that I recommend
-    -- pulling them out as top-level (unexported) declarations.
-    -- That will also cut down on extraneous indentation that is a
-    -- consequence of them being in the 'where' clause here.
+    -- Some of these 'where' bindings are large enough (in LOC or
+    -- complexity) that I recommend pulling them out as top-level
+    -- (unexported) declarations. That will also cut down on extraneous
+    -- indentation that is a consequence of them being in the 'where'
+    -- clause here.
     evalInEnv env' =
         -- JTD:
         --
