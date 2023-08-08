@@ -48,6 +48,14 @@ data Num a => Expr a =
     -- of String, so as to avoid possible (and likely) bugs where you
     -- are holding a String and don't know for sure whether it's a
     -- legitimate operator.
+    --
+    -- So e.g.
+    --
+    -- newtype OperatorName = OperatorName String
+    --
+    -- and then
+    --
+    -- Infix OperatorName ...
     | Infix String (Expr a) (Expr a)
     | ApplyFunc (FunctionApplication a)
     | Quantified (AggregationApplication a)
