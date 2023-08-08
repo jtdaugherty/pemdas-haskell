@@ -30,6 +30,15 @@ basicLanguage = Language
 prop_evalVarEmptyEnv :: String -> Bool
 prop_evalVarEmptyEnv name = isLeft $ evaluateIn basicLanguage (Variable name)
 
+-- JTD:
+--
+-- To be explicit: I see lots of top-level bindings' type signatures,
+-- and I want to positively reinforce that as a practice. Some Haskell
+-- programmers don't bother with those, although I don't see that much
+-- at Galois. But please keep doing this! I find it helps not only
+-- for readability but to force us to check our thinking on what we
+-- think the type of a thing should be. And if you leave these out, the
+-- compiler will guess the type, and it isn't always quite right.
 prop_evalQuantification :: String -> Integer -> [(String, Integer)] -> Bool
 prop_evalQuantification name domainMin env =
     -- JTD:
